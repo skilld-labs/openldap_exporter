@@ -60,7 +60,7 @@ func (config *LDAPConfig) ParseAddr(addr string) error {
 	var u *url.URL
 
 	u, err := url.Parse(addr)
-	if (err != nil) {
+	if err != nil {
 		// Well, so far the easy way....
 		u = &url.URL{}
 	}
@@ -112,6 +112,7 @@ func (config *LDAPConfig) LoadCACert(cafile string) error {
 
 	config.TLSConfig.RootCAs = x509.NewCertPool()
 	config.TLSConfig.ServerName = config.Host
+	config.TLSConfig.InsecureSkipVerify = true
 
 	ok := config.TLSConfig.RootCAs.AppendCertsFromPEM(cert)
 
@@ -134,7 +135,7 @@ func NewLDAPConfig() LDAPConfig {
 	conf.Protocol = "tcp"
 	conf.UseTLS = false
 	conf.UseStartTLS = false
-	conf.TLSConfig = tls.Config{}
+	conf.TLSConfig = tls.Config{InsecureSkipVerify: true}
 
 	return conf
 
